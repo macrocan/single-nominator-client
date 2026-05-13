@@ -74,14 +74,15 @@ export async function isMatchSingleNominatorCodeHash(
   singleNominatorAddress: string
 ) {
   const client = await getClientV2();
-  return (
-    (await getCodeAndDataHash(client, Address.parse(singleNominatorAddress)))
-      .codeCellHash?.base64 == SINGLE_NOMINATOR_CODE_HASH
-  );
+  const hash = (await getCodeAndDataHash(client, Address.parse(singleNominatorAddress)))
+    .codeCellHash?.base64;
+  return SINGLE_NOMINATOR_CODE_HASHES.includes(hash);
 }
 
-const SINGLE_NOMINATOR_CODE_HASH =
-  "zA05WJ6ywM/g/eKEVmV6O909lTlVrj+Y8lZkqzyQT70="; //v1.1
+const SINGLE_NOMINATOR_CODE_HASHES = [
+  "xjonZrValtVP2IwnJ87mP+3f08QvX+Vpg+PkNmB+suU=", // v1.0
+  "zA05WJ6ywM/g/eKEVmV6O909lTlVrj+Y8lZkqzyQT70=", // v1.1
+];
 
 export async function waitForContractToBeDeployed(
   client: TonClient,
