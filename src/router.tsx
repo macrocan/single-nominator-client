@@ -44,5 +44,5 @@ export const router = createBrowserRouter([
     ],
   },
 ], {
-  basename: '/single-nominator-client'
+  basename: import.meta.env.VITE_BASE_URL ?? '/single-nominator-client'
 });

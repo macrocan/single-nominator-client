@@ -43,7 +43,7 @@ export const DownloadFilesStep = () => {
 
     zip.file(
       "single-nominator.addr",
-      new Blob([arrayBuffer], { type: "application/octet-stream" })
+      new Blob([new Uint8Array(arrayBuffer)], { type: "application/octet-stream" })
     );
 
     const data = [

@@ -79,7 +79,7 @@ export async function isMatchSingleNominatorCodeHash(
   return SINGLE_NOMINATOR_CODE_HASHES.includes(hash);
 }
 
-const SINGLE_NOMINATOR_CODE_HASHES = [
+export const SINGLE_NOMINATOR_CODE_HASHES = [
   "xjonZrValtVP2IwnJ87mP+3f08QvX+Vpg+PkNmB+suU=", // v1.0
   "zA05WJ6ywM/g/eKEVmV6O909lTlVrj+Y8lZkqzyQT70=", // v1.1
 ];
@@ -88,12 +88,12 @@ export async function waitForContractToBeDeployed(
   client: TonClient,
   deployedContract: Address
 ) {
-  const seqnoStepInterval = 2500;
+  const seqnoStepInterval = 3000; // 3s per attempt
   let retval = false;
   console.log(
     `⏳ waiting for contract to be deployed at [${deployedContract.toString()}]`
   );
-  for (let attempt = 0; attempt < 10; attempt++) {
+  for (let attempt = 0; attempt < 24; attempt++) { // 24 × 3s = 72s max
     await sleep(seqnoStepInterval);
     if (await client.isContractDeployed(deployedContract)) {
       retval = true;

@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Address, Sender, toNano, beginCell } from "ton-core";
-import { fromNano } from "ton";
+import { Address, Sender, toNano, fromNano, beginCell } from "ton-core";
 import { getClientV2 } from "./client";
 import { waitForConditionChange } from "./util";
 
@@ -10,42 +8,35 @@ const MSG_VALUE = toNano(0.1);
 export async function withdraw(
   sender: Sender,
   singleNominatorAddr: string,
-  amount?: number
+  amount?: string
 ) {
   const client = await getClientV2();
 
-  let _amount;
+  const balance: bigint = await client.getBalance(
+    Address.parse(singleNominatorAddr)
+  );
+  const amountNano: bigint = amount === undefined ? balance : toNano(amount);
 
-  const balance = await client.getBalance(Address.parse(singleNominatorAddr));
-  if (!amount) {
-    _amount = parseFloat(fromNano(balance));
-  } else {
-    _amount = amount;
-  }
-
-  if (Number(_amount) > parseFloat(fromNano(balance))) {
+  if (amountNano > balance) {
     throw new Error(
-      `Sanity test cannot be completed because single nominator balance (${parseFloat(
-        fromNano(balance)
-      ).toFixed(2)} TON) is less than ${_amount} TON`
+      `Amount ${fromNano(amountNano)} TON exceeds balance ${fromNano(
+        balance
+      )} TON`
     );
   }
 
   const payload = beginCell()
     .storeUint(WITHDRAW, 32)
     .storeUint(0, 64)
-    .storeCoins(toNano(_amount.toFixed(2)))
+    .storeCoins(amountNano)
     .endCell();
 
-  const oldBalance = (
-    await client.getBalance(Address.parse(singleNominatorAddr))
-  ).toString();
-  console.log(singleNominatorAddr, amount, client, "sending withdraw");
+  const oldBalance = balance.toString();
 
   await sender.send({
     to: Address.parse(singleNominatorAddr),
     value: MSG_VALUE,
-    sendMode: 1 + 2,
+    sendMode: 1,
     body: payload,
   });
 

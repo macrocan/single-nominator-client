@@ -5,7 +5,7 @@ import { waitForConditionChange } from "./util";
 export async function transferFunds(
   sender: Sender,
   singleNominatorAddr: string,
-  amount: number
+  amount: string
 ) {
   const client = await getClientV2();
 
@@ -15,8 +15,8 @@ export async function transferFunds(
 
   await sender.send({
     to: Address.parse(singleNominatorAddr),
-    value: BigInt(toNano(amount)),
-    sendMode: 1 + 2,
+    value: toNano(amount),
+    sendMode: 1,
   });
 
   return await waitForConditionChange(

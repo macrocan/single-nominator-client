@@ -9,6 +9,7 @@ import {
   Address,
   SenderArguments,
 } from "ton-core";
+import { TX_VALID_UNTIL_MS } from "consts";
 
 export const useGetSender = () => {
   const address = useTonAddress();
@@ -35,7 +36,7 @@ export const useGetSender = () => {
       address: Address.parse(address!),
       async send(args: SenderArguments) {
         await tonConnect.sendTransaction({
-          validUntil: Date.now() + 5 * 60 * 1000,
+          validUntil: Date.now() + TX_VALID_UNTIL_MS,
           messages: [
             {
               address: args.to.toString(),

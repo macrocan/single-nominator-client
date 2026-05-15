@@ -171,10 +171,10 @@ const NewValidatorAddress = () => {
 
   const address = watch("newValidatorAddress");
 
-  const error = useCallback(() => {
+  const error = useCallback((message: string) => {
     Modal.error({
       title: "Change validator address failed",
-      content: <ModalErrorContent />,
+      content: <ModalErrorContent message={message} />,
     });
   }, []);
 

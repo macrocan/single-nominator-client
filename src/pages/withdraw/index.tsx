@@ -79,10 +79,10 @@ const Form = () => {
   const inputs = useInputs(isCustomAmount);
   const { mutateAsync, isLoading: verifyLoading } = useVerifySNAddress();
 
-  const error = useCallback(() => {
+  const error = useCallback((message: string) => {
     Modal.error({
       title: "Withdrawal failed",
-      content: <ModalErrorContent />,
+      content: <ModalErrorContent message={message} />,
     });
   }, []);
 
@@ -109,7 +109,7 @@ const Form = () => {
 
     mutate({
       address: data.address,
-      amount: isCustomAmount ? Number(data.amount) : undefined,
+      amount: isCustomAmount ? data.amount : undefined,
       onSuccess: () => {
         success();
         reset();

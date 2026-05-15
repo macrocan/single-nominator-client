@@ -2,7 +2,7 @@ import { Address, Sender, toNano, beginCell } from "ton-core";
 import { getClientV2 } from "./client";
 import { waitForConditionChange } from "./util";
 
-const MSG_VALUE = toNano(1.1);
+const MSG_VALUE = toNano("0.1"); // OP::CHANGE_VALIDATOR_ADDRESS only writes storage; 0.1 TON is sufficient
 const CHANGE_VALIDATOR_ADDRESS = 0x1001;
 
 export async function changeValidator(
@@ -20,12 +20,12 @@ export async function changeValidator(
   await sender.send({
     to: Address.parse(singleNominatorAddr),
     value: MSG_VALUE,
-    sendMode: 1 + 2,
+    sendMode: 1,
     body: payload,
   });
   
   return waitForConditionChange(async () => {
-    (await roles(singleNominatorAddr)).validatorAddress;
+    return (await roles(singleNominatorAddr)).validatorAddress;
   }, oldValidatorAddress);
 }
 

@@ -159,10 +159,10 @@ const DesployStep = () => {
   const { ownerAddress, validatorAddress, nextStep, setFromValues } =
     useStore();
   const { mutate, isLoading } = useDeploySingleNominatorTx();
-  const error = useCallback(() => {
+  const error = useCallback((message: string) => {
     Modal.error({
       title: "Deploy failed",
-      content: <ModalErrorContent />,
+      content: <ModalErrorContent message={message} />,
       okText: "Close",
     });
   }, []);
@@ -479,7 +479,7 @@ const SanityTestStepOwner = () => {
   const onWithdraw = useCallback(() => {
     withdraw({
       address: snAddress,
-      amount: WITHDRAW_STEP_AMOUNT,
+      amount: WITHDRAW_STEP_AMOUNT.toString(),
       onError: withdrawError,
       onSuccess: async () => {
         showSuccessToast("Funds withdrawn");
@@ -553,7 +553,7 @@ export const SanityTestStep = () => {
   );
 };
 
-const StyledAlert = styled(Alert)<{ $darkMode: boolean }>({
+const StyledAlert = styled(Alert)({
   marginTop: 20,
 });
 

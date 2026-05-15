@@ -21,7 +21,7 @@ export const useWithdrawTx = () => {
       amount,
     }: {
       address: string;
-      amount?: number;
+      amount?: string;
       onSuccess?: (value?: string) => void;
       onError?: (value: string) => void;
     }) => {
@@ -53,7 +53,7 @@ export const useTransferFundsTx = () => {
       const res = await transferFunds(
         getSender(),
         data.address,
-        Number(data.amount)
+        data.amount
       );
       await data.onSuccess?.();
       return res;
